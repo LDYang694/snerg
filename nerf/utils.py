@@ -26,9 +26,9 @@ import jax.scipy as jsp
 import numpy as np
 from PIL import Image
 import yaml
-from snerg.nerf import datasets
+from nerf import datasets
 
-BASE_DIR = "snerg"
+BASE_DIR = ""
 INTERNAL = False
 
 
