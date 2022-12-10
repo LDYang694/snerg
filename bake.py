@@ -230,34 +230,34 @@ def main(unused_argv):
     del train_refs
     gc.collect()
 
-    # # Now that we've refined the MLP, create test data with ray marching too.
-    # (test_rgbs, _, test_directions,
-    #  _) = eval_and_refine.build_sharded_dataset_for_view_dependence(
-    #      test_dataset, atlas_t, atlas_block_indices_t, atlas_params,
-    #      scene_params, render_params)
+    # Now that we've refined the MLP, create test data with ray marching too.
+    (test_rgbs, _, test_directions,
+     _) = eval_and_refine.build_sharded_dataset_for_view_dependence(
+         test_dataset, atlas_t, atlas_block_indices_t, atlas_params,
+         scene_params, render_params)
 
-    # # Now run the view-dependence on the ray marched output images to add
-    # # back view-depdenent effects. Note that we do this both before and after
-    # # refining the parameters.
-    # pre_refined_images = eval_and_refine.eval_dataset_and_unshard(
-    #     viewdir_mlp_model, viewdir_mlp_params, test_rgbs, test_directions,
-    #     test_dataset, scene_params)
-    # post_refined_images = eval_and_refine.eval_dataset_and_unshard(
-    #     viewdir_mlp_model, refined_viewdir_mlp_params, test_rgbs,
-    #     test_directions, test_dataset, scene_params)
-    # del test_rgbs
-    # del test_directions
-    # gc.collect()
+    # Now run the view-dependence on the ray marched output images to add
+    # back view-depdenent effects. Note that we do this both before and after
+    # refining the parameters.
+    pre_refined_images = eval_and_refine.eval_dataset_and_unshard(
+        viewdir_mlp_model, viewdir_mlp_params, test_rgbs, test_directions,
+        test_dataset, scene_params)
+    post_refined_images = eval_and_refine.eval_dataset_and_unshard(
+        viewdir_mlp_model, refined_viewdir_mlp_params, test_rgbs,
+        test_directions, test_dataset, scene_params)
+    del test_rgbs
+    del test_directions
+    gc.collect()
 
-    # # Evaluate image quality metrics for the baked SNeRG scene, both before and
-    # # after refining the  view-dependence MLP.
-    # pre_image_metrics = quality_evaluator.eval_image_list(
-    #     pre_refined_images, test_dataset.images)
-    # post_image_metrics = quality_evaluator.eval_image_list(
-    #     post_refined_images, test_dataset.images)
-    # pre_psnr, pre_ssim = pre_image_metrics[0], pre_image_metrics[1]
-    # post_psnr, post_ssim = post_image_metrics[0], post_image_metrics[1]
-    # gc.collect()
+    # Evaluate image quality metrics for the baked SNeRG scene, both before and
+    # after refining the  view-dependence MLP.
+    pre_image_metrics = quality_evaluator.eval_image_list(
+        pre_refined_images, test_dataset.images)
+    post_image_metrics = quality_evaluator.eval_image_list(
+        post_refined_images, test_dataset.images)
+    pre_psnr, pre_ssim = pre_image_metrics[0], pre_image_metrics[1]
+    post_psnr, post_ssim = post_image_metrics[0], post_image_metrics[1]
+    gc.collect()
 
     # Export the baked scene so we can view it in the web-viewer.
     export.export_snerg_scene(out_dir, atlas_t.numpy(),

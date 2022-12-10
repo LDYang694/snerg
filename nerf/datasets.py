@@ -18,7 +18,6 @@ INTERNAL = False  # pylint: disable=g-statement-before-imports
 import json
 import os
 from os import path
-from pathlib import Path
 import queue
 import threading
 if not INTERNAL:
@@ -216,8 +215,7 @@ class Blender(Dataset):
     cams = []
     for i in range(len(meta["frames"])):
       frame = meta["frames"][i]
-      data_dir = Path(args.data_dir)
-      fname = data_dir.joinpath(frame["file_path"] + ".png")
+      fname = os.path.join(args.data_dir, frame["file_path"] + ".png")
       with utils.open_file(fname, "rb") as imgin:
         image = np.array(Image.open(imgin), dtype=np.float32) / 255.
         if args.factor == 2:

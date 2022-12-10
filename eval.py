@@ -28,9 +28,9 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_hub as tf_hub
 
-from snerg.nerf import datasets
-from snerg.nerf import models
-from snerg.nerf import utils
+from nerf import datasets
+from nerf import models
+from nerf import utils
 
 FLAGS = flags.FLAGS
 
